@@ -16,9 +16,9 @@ import com.sun.javadoc.FieldDoc;
  */
 public class Model implements DirectedGraphNode {
 
-    String name;
-    String comment;
-    List<Field> fields = new ArrayList<Field>();
+    String             name;
+    String             comment;
+    List<Field>        fields = new ArrayList<Field>();
     Map<String, Model> map;
 
     Model(ClassDoc doc, Map<String, Model> map) {
@@ -63,15 +63,17 @@ public class Model implements DirectedGraphNode {
             }), ",\n");
         }
         return String
-                .format("%s{\n\t<elem|\n%s\n\t>,\n\t<cons|\n\t\t$identity='ID',\n\t\t$cnName='%s',\n\t\t$memo='%s'%s\n\t\t>,\n\t<insMapping|\n%s%s\n\t>\n}\n",
-                        name, Lists.join(elems, ",\n"), name, comment, cons, fixMappings, Lists.join(ins, ",\n"));
+            .format(
+                "#ADD NORMAL\n%s{\n\t<elem|\n%s\n\t>,\n\t<cons|\n\t\t$identity='%s',\n\t\t$cnName='%s',\n\t\t$memo='%s'%s\n\t\t>,\n\t<insMapping|\n%s%s\n\t>\n}\n",
+                name, Lists.join(elems, ",\n"), fields.get(0).name, name, comment, cons,
+                fixMappings, Lists.join(ins, ",\n"));
     }
 
     public Collection<Model> getPredecessors() {
         List<Model> deps = Lists.map(this.fields, new Lists.MapFunc<Field, Model>() {
 
             public Model apply(Field in) {
-                return map.get(in.hasTypeParam?in.paramType():in.type);
+                return map.get(in.hasTypeParam ? in.paramType() : in.type);
             }
         });
 

@@ -22,7 +22,7 @@ import com.sun.tools.javadoc.Main;
  */
 
 public class TestDoclet {
-
+    
     /**
      * Doclet开始方法，将被下面的 main(} 方法间接调用
      * 

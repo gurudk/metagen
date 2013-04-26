@@ -17,13 +17,14 @@ import com.sun.javadoc.Type;
 public class Field {
     private static String[] strstr = new String[] { "String", "String" };
 
-    Field(FieldDoc doc) {
-        this.name = capitalize(doc.name());
-        this.type = capitalize(doc.type().typeName());
-        this.comment = Utils.firstComment(doc.commentText());
-        if (doc.type().asParameterizedType() != null) {
+    Field(FieldDoc fieldDoc) {
+        this.doc = fieldDoc;
+        this.name = capitalize(fieldDoc.name());
+        this.type = capitalize(fieldDoc.type().typeName());
+        this.comment = Utils.firstComment(fieldDoc.commentText());
+        if (fieldDoc.type().asParameterizedType() != null) {
             this.hasTypeParam = true;
-            this.typeParam = map(doc.type().asParameterizedType().typeArguments());
+            this.typeParam = map(fieldDoc.type().asParameterizedType().typeArguments());
         }
         if ("Map".equals(this.type) && this.hasTypeParam && Arrays.equals(this.typeParam, strstr)) {
             this.type = "List";
@@ -51,6 +52,7 @@ public class Field {
     String[] typeParam;
     String comment;
     boolean hasTypeParam = false;
+    FieldDoc doc;
 
     public boolean isList() {
         return "List".equals(this.type);
@@ -80,6 +82,6 @@ public class Field {
 
     @Override
     public String toString() {
-        return String.format("%s{<cons|$cnName='%s',$memo='%s',$type='%s'>}\n", name, comment, comment, type);
+        return String.format("#ADD NORMAL\n%s{<cons|$cnName='%s',$memo='%s',$type='%s'>}\n", name, comment, comment, type);
     }
 }

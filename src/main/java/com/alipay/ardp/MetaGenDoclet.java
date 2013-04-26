@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +30,11 @@ import com.sun.javadoc.RootDoc;
  * @version $Id: MetaGenDoclet.java, v 0.1 2013-4-24 下午8:08:01 ji.zhangyj Exp $
  */
 public class MetaGenDoclet {
+
+    private static final Set<String> whitelist = new HashSet<String>(Arrays.asList(new String[] {
+            "Long", "long", "Integer", "int", "Boolean", "boolean", "Float", "float", "Double",
+            "double", "Short", "short", "Byte", "byte", "Character", "char", "Date","Money","String" }));
+
     public static boolean start(RootDoc root) {
         ClassDoc[] classes = root.classes();
         Set<Field> fields = new HashSet<Field>();
@@ -38,9 +44,11 @@ public class MetaGenDoclet {
             Model model = new Model(classes[i], map);
             map.put(model.name, model);
 
-            fields.addAll(Lists.filter(model.fields, new Predicate<Field>(){
+            fields.addAll(Lists.filter(model.fields, new Predicate<Field>() {
                 public boolean apply(Field in) {
-                    return !BlacklistFields.in(in.name) && !in.isList();
+                    //不在黑名单，源初类型
+                    return !BlacklistFields.in(in.name)
+                           && whitelist.contains(in.doc.type().simpleTypeName());
                 }
             }));
         }
